@@ -1,4 +1,6 @@
 import logging
+import time
+
 from producer_config import Producer
 from file_meta_made import FileMetaMade
 from pathlib import Path
@@ -15,10 +17,10 @@ class Manager:
         try:
             self.producer.send(topic=topic, value=file_dict)
 
-            logging.info(f'file: "{file_dict['name']}" successfully send.')
+            logging.info(f'file: {file_dict} successfully send.')
 
         except Exception as e:
-            logging.critical(f'failed to send file: "{file_dict['name']}" to kafka, exception: {e}.')
+            logging.critical(f'failed to send file: {file_dict} to kafka, exception: {e}.')
 
 
     # return all the files within a given directory
@@ -33,25 +35,35 @@ class Manager:
             logging.critical(f'failed to get the list of files in directory: "{directory}", exception: {e}')
 
 
-    # # main function
-    # def run(self, files_dir_path:str):
-    #     try:
-    #         logging.info(f'getting all files from dir: "{files_dir_path}"')
-    #         files_to_send = self.files_within_dir(directory=files_dir_path)
-    #
-    #         batch = 10
-    #
-    #         while files_to_send:
-    #
-    #             for file in files_to_send:
-    #                 file_path =
-    #                 file_dict = FileMetaMade.file_to_json(file_path=file_path)
+    # main function
+    def run(self, files_dir_path:str, batches:int, send_topic:str):
+        try:
+            logging.info(f'getting all files from dir: "{files_dir_path}"')
 
-        #
-        #
-        #
-        #
-        # except Exception as e:
-        #     logging.critical(f'failed occurred on manager.run, exception: {e}')
+            files_lst_to_send = self.files_within_dir(directory=files_dir_path)
+            files_number = len(files_lst_to_send)
+
+            batch = batches
+            msg_send = 0
+
+            for i in range(files_number):
+
+                file_path = files_lst_to_send[i]
+                file_dict = FileMetaMade.file_to_json(file_path=file_path)
+
+                logging.info(f'sending file metadata: {file_dict}')
+                self.send_file_json(file_dict=file_dict, topic=send_topic)
+
+                msg_send += 1
+
+                if msg_send == batch:
+                    logging.info(f'send {msg_send} - wait 3 sec.')
+                    time.sleep(3)
+
+            logging.info(f'finish to send files data - sent: {files_number}.')
+
+
+        except Exception as e:
+            logging.critical(f'failed occurred on manager.run, exception: {e}')
 
 

@@ -9,3 +9,10 @@ from pathlib import Path
 # print(stats.st_mtime)
 # print(stats.st_ctime)
 # print(f'{stats.st_size / 1000000} mega_bytes.')
+
+
+path = Path('podcasts')
+files = [item for item in path.iterdir() if item.is_file()]
+for file in files:
+    print(file)
+    print(file.stat().st_size)

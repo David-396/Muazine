@@ -1,5 +1,6 @@
 import json
 import logging
+import pathlib
 from pathlib import Path
 
 logging.basicConfig(level=logging.DEBUG,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("file_meta_made.log"),logging.StreamHandler()])
@@ -12,18 +13,18 @@ class FileMetaMade:
 
     # creating the metadata on the given file path
     @staticmethod
-    def file_to_json(file_path:str):
+    def file_to_json(file_path:pathlib.Path):
         try:
-            logging.info(f'jsonify file: {file_path}')
+            logging.info(f'jsonify file: {file_path.name}')
 
-            path_obj = Path(file_path)
-            stats = path_obj.stat()
+            stats = file_path.stat()
 
-            file_dict = {'absolute_path': path_obj.absolute(),
-                         'type': path_obj.suffix,
-                         'name': path_obj.name,
-                         'size_in_megabytes': stats.st_size / 1000000,
-                         'created_time': stats.st_ctime}
+            file_dict = {'absolute_path': file_path.absolute(),
+                         'metadata': {'type': file_path.suffix,
+                                     'name': file_path.name,
+                                     'size_in_megabytes': stats.st_size / 1000000,
+                                     'created_time': stats.st_ctime}
+                         }
 
             return file_dict
 
