@@ -1,0 +1,72 @@
+from pymongo import MongoClient
+import logging
+
+logging.basicConfig(level=logging.DEBUG,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("mdb_crud.log"),logging.StreamHandler()])
+
+
+class MongoCRUD:
+    def __init__(self, mdb_client:MongoClient):
+        self.client = mdb_client
+
+    # insert one document to mongo
+    def insert_one(self, db_name:str, collection:str, doc:dict):
+        try:
+
+            collection = self.client[db_name][collection]
+            result = collection.insert_one(doc)
+
+            logging.info(f'doc: {doc} successfully inserted to mdb.')
+
+            return str(result.inserted_id)
+
+        except Exception as e:
+            logging.critical(f'exception occurred to insert doc: {doc}, exception: {e}')
+
+    # get one document by id
+    def get_by_id(self, db_name:str, collection:str, id_: str):
+        try:
+
+            collection = self.client[db_name][collection]
+            doc_found = collection.find_one({"_id": id_})
+
+            logging.info(f'doc id: {id_} has found.')
+
+            return doc_found
+
+        except Exception as e:
+            logging.critical(f'exception occurred to find doc id: {id_}, exception: {e}')
+
+    # get all documents from mongo
+    def find_all(self, db_name:str, collection:str):
+        try:
+            collection = self.client[db_name][collection]
+            all_docs = collection.find().to_list
+
+            logging.info(f'retrieving al docs from mongo.')
+
+            return all_docs
+
+        except Exception as e:
+            logging.critical(f'exception occurred to extract all documents from mongo, exception: {e}')
+
+    # update one document by id
+    def update_by_id(self, db_name:str, collection:str, id_: str, update_fields:dict):
+        try:
+            collection = self.client[db_name][collection]
+            result = collection.update_one({"_id": id_}, {"$set": update_fields})
+
+            logging.info(f'successfully updated document id: {id_}, result:{result}')
+
+        except Exception as e:
+            logging.critical(f'exception occurred to update document id: {id_}, exception: {e}')
+
+    # delete one by id
+    def delete_by_id(self, db_name:str, collection:str, id_:str):
+        try:
+            collection = self.client[db_name][collection]
+            result = collection.delete_one({"_id": id_})
+
+            logging.info(f'successfully delete id: {id_}, result:{result}')
+
+        except Exception as e:
+            logging.critical(f'exception occurred to delete document id: {id_}, exception: {e}')

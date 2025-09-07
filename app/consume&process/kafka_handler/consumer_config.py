@@ -5,7 +5,7 @@ import json
 logging.basicConfig(level=logging.DEBUG,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("consumer_config.log"),logging.StreamHandler()])
 
 
-def get_consumer_events(topics:list[str], group_id:str, kafka_host:str, kafka_port:str):
+def get_consumer(topics:list[str], group_id:str, kafka_host:str, kafka_port:str):
     logging.info("Creating Consumer Object ..")
 
     bootstrap_servers = [f'{kafka_host}:{kafka_port}']
