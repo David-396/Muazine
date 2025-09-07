@@ -5,7 +5,7 @@ from producer_config import Producer
 from file_meta_made import FileMetaMade
 from pathlib import Path
 
-logging.basicConfig(level=logging.DEBUG,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("manager.log"),logging.StreamHandler()])
+logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("manager.log"),logging.StreamHandler()])
 
 class Manager:
     def __init__(self, kafka_host:str, kafka_port:str):

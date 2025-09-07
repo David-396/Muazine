@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 import logging
 
-logging.basicConfig(level=logging.DEBUG,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("mdb_dal.log"),logging.StreamHandler()])
+logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("mdb_dal.log"),logging.StreamHandler()])
 
 
 class MongoConnector:

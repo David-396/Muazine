@@ -3,7 +3,7 @@ import logging
 import pathlib
 from pathlib import Path
 
-logging.basicConfig(level=logging.DEBUG,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("file_meta_made.log"),logging.StreamHandler()])
+logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("file_meta_made.log"),logging.StreamHandler()])
 
 
 class FileMetaMade:

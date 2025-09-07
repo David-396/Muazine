@@ -1,7 +1,8 @@
+from gridfs import GridFS
 from pymongo import MongoClient
 import logging
 
-logging.basicConfig(level=logging.DEBUG,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("mdb_crud.log"),logging.StreamHandler()])
+logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("mdb_crud.log"),logging.StreamHandler()])
 
 
 class MongoCRUD:
@@ -21,6 +22,22 @@ class MongoCRUD:
 
         except Exception as e:
             logging.critical(f'exception occurred to insert doc: {doc}, exception: {e}')
+
+    # saving a audio content to mdb
+    def save_audio_content_file_on_mdb(self, db_name:str, collection_name:str, custom_id: str, audio_file_path: str, file_name:str):
+        try:
+            logging.info(f'saving - {audio_file_path} - file content to mongo.')
+
+            db = self.client[db_name]
+            fs = GridFS(db, collection=collection_name)
+
+            with open(audio_file_path, 'rb') as audio_file:
+                file_id = fs.put(audio_file, _id=custom_id, filename=file_name)
+
+            return file_id
+
+        except Exception as e:
+            logging.critical(f'failed to saving file content of - {audio_file_path} - file, exception: {e}')
 
     # get one document by id
     def get_by_id(self, db_name:str, collection:str, id_: str):

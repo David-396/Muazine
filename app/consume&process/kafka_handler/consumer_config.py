@@ -2,7 +2,7 @@ import logging
 from kafka import KafkaConsumer
 import json
 
-logging.basicConfig(level=logging.DEBUG,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("consumer_config.log"),logging.StreamHandler()])
+logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("consumer_config.log"),logging.StreamHandler()])
 
 
 def get_consumer(topics:list[str], group_id:str, kafka_host:str, kafka_port:str):

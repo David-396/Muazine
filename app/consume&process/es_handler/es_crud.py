@@ -2,7 +2,7 @@ import logging
 from elasticsearch import Elasticsearch, helpers
 
 
-logging.basicConfig(level=logging.DEBUG,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("es_crud.log"),logging.StreamHandler()])
+logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("es_crud.log"),logging.StreamHandler()])
 
 
 
@@ -47,10 +47,10 @@ class CRUD:
 
 
     ''' C - create: '''
-    # index one doc to es
-    def index_one(self, index_name:str, doc:dict):
+    # index one doc to es with given id
+    def index_one_with_id(self, index_name:str, doc:dict, id_:str):
         try:
-            res = self.client.index(index=index_name, document=doc)
+            res = self.client.index(index=index_name, document=doc, id=id_)
             _id = res['_id']
             logging.info(f'index succeed, _id:{_id}\ndoc: {doc}')
             self.refresh(index_name=index_name)

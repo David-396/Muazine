@@ -1,7 +1,7 @@
 import logging
 from elasticsearch import Elasticsearch
 
-logging.basicConfig(level=logging.DEBUG,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("es_dal.log"),logging.StreamHandler()])
+logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("es_dal.log"),logging.StreamHandler()])
 
 class ESConnector:
     def __init__(self, host:str, port:str|int):

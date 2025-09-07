@@ -2,7 +2,7 @@ import logging
 import os
 from manager import Manager
 
-logging.basicConfig(level=logging.DEBUG,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("main.log"),logging.StreamHandler()])
+logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("main.log"),logging.StreamHandler()])
 
 
 KAFKA_HOST = os.getenv('KAFKA_HOST', 'localhost')

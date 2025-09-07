@@ -2,7 +2,7 @@ from kafka import KafkaProducer
 import json
 import logging
 
-logging.basicConfig(level=logging.DEBUG,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("producer_config.log"),logging.StreamHandler()])
+logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("producer_config.log"),logging.StreamHandler()])
 
 class Producer:
     def __init__(self, host:str, port:str):
