@@ -58,8 +58,8 @@ class Manager:
                     sum_sent += 1
 
                     if temp_msg_send == batch:
-                        temp_msg_send = 0
                         logging.info(f'send {temp_msg_send} - wait 3 sec.')
+                        temp_msg_send = 0
                         time.sleep(3)
 
             logging.info(f'finish to send files data - sent: {sum_sent}.')

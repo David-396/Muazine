@@ -9,8 +9,8 @@ MDB_DB_NAME = os.getenv('MDB_DB_NAME', 'podcasts_persister')
 MDB_COLL_NAME = os.getenv('MDB_COLL_NAME', 'podcasts_content')
 MONGO_HOST = os.getenv("MONGO_HOST", "localhost")
 MONGO_PORT = int(os.getenv("MONGO_PORT", '27017'))
-MONGO_USER = os.getenv("MONGO_USER", "root")
-MONGO_PASSWORD = os.getenv("MONGO_PASSWORD", "pass")
+MONGO_USER = os.getenv("MONGO_USER", None)
+MONGO_PASSWORD = os.getenv("MONGO_PASSWORD", None)
 
 logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("main.log"),logging.StreamHandler()])
 
