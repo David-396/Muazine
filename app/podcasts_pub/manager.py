@@ -40,27 +40,29 @@ class Manager:
         try:
             logging.info(f'getting all files from dir: "{files_dir_path}"')
 
-            files_lst_to_send = self.files_within_dir(directory=files_dir_path)
-            files_number = len(files_lst_to_send)
-
             batch = batches
-            msg_send = 0
+            temp_msg_send = 0
+            sum_sent = 0
 
-            for i in range(files_number):
+            files_iter = Path(files_dir_path).iterdir()
+            for file in files_iter:
 
-                file_path = files_lst_to_send[i]
-                file_dict = FileMetaMade.file_to_json(file_path=file_path)
+                if file.is_file():
 
-                logging.info(f'sending file metadata: {file_dict}')
-                self.send_file_json(file_dict=file_dict, topic=send_topic)
+                    file_dict = FileMetaMade.file_to_json(file_path=file)
 
-                msg_send += 1
+                    logging.info(f'sending file metadata: {file_dict}')
+                    self.send_file_json(file_dict=file_dict, topic=send_topic)
 
-                if msg_send == batch:
-                    logging.info(f'send {msg_send} - wait 3 sec.')
-                    time.sleep(3)
+                    temp_msg_send += 1
+                    sum_sent += 1
 
-            logging.info(f'finish to send files data - sent: {files_number}.')
+                    if temp_msg_send == batch:
+                        temp_msg_send = 0
+                        logging.info(f'send {temp_msg_send} - wait 3 sec.')
+                        time.sleep(3)
+
+            logging.info(f'finish to send files data - sent: {sum_sent}.')
 
 
         except Exception as e:

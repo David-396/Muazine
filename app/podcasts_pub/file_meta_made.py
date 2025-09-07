@@ -19,7 +19,7 @@ class FileMetaMade:
 
             stats = file_path.stat()
 
-            file_dict = {'absolute_path': file_path.absolute(),
+            file_dict = {'absolute_path': str(file_path.absolute()),
                          'metadata': {'type': file_path.suffix,
                                      'name': file_path.name,
                                      'size_in_megabytes': stats.st_size / 1000000,
