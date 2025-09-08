@@ -1,9 +1,11 @@
 import logging
 import pathlib
 from datetime import datetime
+from app.logger import Logger
 
-logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("file_meta_made.log"),logging.StreamHandler()])
+logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("files_meta_pub.log"),logging.StreamHandler()])
 
+logger = Logger.get_logger()
 
 class FileMetaMade:
     def __init__(self):
@@ -14,7 +16,6 @@ class FileMetaMade:
     @staticmethod
     def file_to_json(file_path:pathlib.Path):
         try:
-            logging.info(f'jsonify file: {file_path.name}')
 
             stats = file_path.stat()
 
@@ -29,6 +30,7 @@ class FileMetaMade:
 
         except Exception as e:
             logging.critical(f'exception occurred to jsonify file: {file_path}, exception: {e}.')
+            logger.error(f'exception occurred to jsonify file: {file_path}, exception: {e}.')
 
 
 

@@ -2,8 +2,11 @@ import os
 import manager
 import logging
 from dotenv import load_dotenv
+from app.logger import Logger
 
-logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("main.log"),logging.StreamHandler()])
+
+logger = Logger.get_logger()
+logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("consume_and_persist.log"),logging.StreamHandler()])
 
 load_dotenv()
 

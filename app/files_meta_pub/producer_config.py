@@ -1,8 +1,10 @@
 from kafka import KafkaProducer
 import json
 import logging
+from app.logger import Logger
 
-logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("producer_config.log"),logging.StreamHandler()])
+logger = Logger.get_logger()
+logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("files_meta_pub.log"),logging.StreamHandler()])
 
 class Producer:
     def __init__(self, host:str, port:str):
@@ -19,8 +21,10 @@ class Producer:
                                      value_serializer=lambda x: json.dumps(x).encode('utf-8'))
 
             logging.info(f'creating new kafka producer on {bootstrap_servers}.')
+            logger.info(f'creating new kafka producer on {bootstrap_servers}.')
 
             return producer
 
         except Exception as e:
             logging.critical(f'failed occurred on producer creating, exception: {e}')
+            logger.error(f'failed occurred on producer creating, exception: {e}')

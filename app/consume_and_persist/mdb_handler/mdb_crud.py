@@ -1,8 +1,10 @@
 from gridfs import GridFS
 from pymongo import MongoClient
 import logging
+from app.logger import Logger
 
-logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("mdb_crud.log"),logging.StreamHandler()])
+logger = Logger.get_logger()
+logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("consume_and_persist.log"),logging.StreamHandler()])
 
 
 class MongoCRUD:
@@ -17,16 +19,17 @@ class MongoCRUD:
             result = collection.insert_one(doc)
 
             logging.info(f'doc: {doc} successfully inserted to mdb.')
+            logger.info(f'doc: {doc} successfully inserted to mdb.')
 
             return str(result.inserted_id)
 
         except Exception as e:
             logging.critical(f'exception occurred to insert doc: {doc}, exception: {e}')
+            logger.error(f'exception occurred to insert doc: {doc}, exception: {e}')
 
     # saving a audio content to mdb
     def save_audio_content_file_on_mdb(self, db_name:str, collection_name:str, custom_id: str, audio_file_path: str, file_name:str):
         try:
-            logging.info(f'saving - {audio_file_path} - file content to mongo.')
 
             db = self.client[db_name]
             fs = GridFS(db, collection=collection_name)
@@ -34,10 +37,14 @@ class MongoCRUD:
             with open(audio_file_path, 'rb') as audio_file:
                 file_id = fs.put(audio_file, _id=custom_id, filename=file_name)
 
+            logging.info(f'successfully saved - {audio_file_path} - file content to mongo.')
+            logger.info(f'successfully saved - {audio_file_path} - file content to mongo.')
+
             return file_id
 
         except Exception as e:
             logging.critical(f'failed to saving file content of - {audio_file_path} - file to mongo, exception: {e}')
+            logger.error(f'failed to saving file content of - {audio_file_path} - file to mongo, exception: {e}')
 
     # get one document by id
     def get_by_id(self, db_name:str, collection:str, id_: str):
@@ -52,6 +59,7 @@ class MongoCRUD:
 
         except Exception as e:
             logging.critical(f'exception occurred to find doc id: {id_}, exception: {e}')
+            logger.error(f'exception occurred to find doc id: {id_}, exception: {e}')
 
     # get all documents from mongo
     def find_all(self, db_name:str, collection:str):
@@ -59,12 +67,13 @@ class MongoCRUD:
             collection = self.client[db_name][collection]
             all_docs = collection.find().to_list
 
-            logging.info(f'retrieving al docs from mongo.')
+            logging.info(f'retrieving all docs from mongo.')
 
             return all_docs
 
         except Exception as e:
             logging.critical(f'exception occurred to extract all documents from mongo, exception: {e}')
+            logger.error(f'exception occurred to extract all documents from mongo, exception: {e}')
 
     # update one document by id
     def update_by_id(self, db_name:str, collection:str, id_: str, update_fields:dict):
@@ -73,17 +82,21 @@ class MongoCRUD:
             result = collection.update_one({"_id": id_}, {"$set": update_fields})
 
             logging.info(f'successfully updated document id: {id_}, result:{result}')
+            logger.info(f'successfully updated document id: {id_}, result:{result}')
 
         except Exception as e:
             logging.critical(f'exception occurred to update document id: {id_}, exception: {e}')
+            logger.error(f'exception occurred to update document id: {id_}, exception: {e}')
 
-    # delete one by id
+    # delete one document by id
     def delete_by_id(self, db_name:str, collection:str, id_:str):
         try:
             collection = self.client[db_name][collection]
             result = collection.delete_one({"_id": id_})
 
             logging.info(f'successfully delete id: {id_}, result:{result}')
+            logger.info(f'successfully delete id: {id_}, result:{result}')
 
         except Exception as e:
             logging.critical(f'exception occurred to delete document id: {id_}, exception: {e}')
+            logger.error(f'exception occurred to delete document id: {id_}, exception: {e}')

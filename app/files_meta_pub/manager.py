@@ -3,8 +3,10 @@ import time
 from producer_config import Producer
 from file_meta_made import FileMetaMade
 from pathlib import Path
+from app.logger import Logger
 
-logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("manager.log"),logging.StreamHandler()])
+logger = Logger.get_logger()
+logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("files_meta_pub.log"),logging.StreamHandler()])
 
 class Manager:
     def __init__(self, kafka_host:str, kafka_port:str):
@@ -17,9 +19,11 @@ class Manager:
             self.producer.send(topic=topic, value=file_dict)
 
             logging.info(f'file: {file_dict} successfully send.')
+            logger.info(f'file: {file_dict} successfully send.')
 
         except Exception as e:
             logging.critical(f'failed to send file: {file_dict} to kafka, exception: {e}.')
+            logger.error(f'failed to send file: {file_dict} to kafka, exception: {e}.')
 
 
     # return all the files within a given directory
@@ -32,12 +36,12 @@ class Manager:
 
         except Exception as e:
             logging.critical(f'failed to get the list of files in directory: "{directory}", exception: {e}')
+            logger.error(f'failed to get the list of files in directory: "{directory}", exception: {e}')
 
 
     # main function
     def run(self, files_dir_path:str, batches:int, send_topic:str):
         try:
-            logging.info(f'getting all files from dir: "{files_dir_path}"')
 
             batch = batches
             temp_msg_send = 0
@@ -51,21 +55,25 @@ class Manager:
                     file_dict = FileMetaMade.file_to_json(file_path=file)
 
                     logging.info(f'sending file metadata: {file_dict}')
+                    logger.info(f'sending file metadata: {file_dict}')
+
                     self.send_file_json(file_dict=file_dict, topic=send_topic)
 
                     temp_msg_send += 1
                     sum_sent += 1
 
                     if temp_msg_send == batch:
-                        logging.info(f'send {temp_msg_send} - wait 3 sec.')
+                        logging.info(f'sent {temp_msg_send} messages - wait 3 sec.')
                         temp_msg_send = 0
                         time.sleep(3)
 
             logging.info(f'finish to send files data - sent: {sum_sent}.')
+            logger.info(f'finish to send files data - sent: {sum_sent}.')
             self.producer.flush()
 
 
         except Exception as e:
             logging.critical(f'failed occurred on manager.run, exception: {e}')
+            logger.error(f'failed occurred on manager.run, exception: {e}')
 
 

@@ -1,7 +1,9 @@
 from pymongo import MongoClient
 import logging
+from app.logger import Logger
 
-logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("mdb_dal.log"),logging.StreamHandler()])
+logger = Logger.get_logger()
+logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("consume_and_persist.log"),logging.StreamHandler()])
 
 
 class MongoConnector:
@@ -15,7 +17,7 @@ class MongoConnector:
 
         logging.info(f'new mongo connection on {self.__client.address}')
 
-
+    # return the client object
     def get_client(self):
          return self.__client
 
@@ -25,4 +27,5 @@ class MongoConnector:
         return self
     def __exit__(self, exc_type, exc_val, exc_tb):
         logging.info(f'closing mongo connection on {self.__client.address}')
+        logger.info(f'closing mongo connection on {self.__client.address}')
         self.__client.close()

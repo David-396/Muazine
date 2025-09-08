@@ -3,9 +3,11 @@ import logging
 from kafka_handler import consumer_config
 from es_handler import es_crud, es_dal
 from mdb_handler import mdb_crud, mdb_dal
+from app.logger import Logger
 
 
-logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("manager.log"),logging.StreamHandler()])
+logger = Logger.get_logger()
+logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("consume_and_persist.log"),logging.StreamHandler()])
 
 
 class Manager:
@@ -59,6 +61,7 @@ class Manager:
     def run(self):
         try:
             logging.info('running the es/mdb persister')
+            logger.info('running the es/mdb persister')
 
             with es_dal.ESConnector(host=self.es_host,port=self.es_port) as es_dal_obj:
                 es_crud_obj = es_crud.CRUD(es_client=es_dal_obj.get_client())
@@ -67,11 +70,13 @@ class Manager:
                 es_crud_obj.create_index(index_name=self.es_index, mappings=self.es_index_mapping)
 
                 logging.info(f'elastic crud successfully started.')
+                logger.info(f'elastic crud successfully started.')
 
                 with mdb_dal.MongoConnector(mongo_host=self.mongo_host,mongo_port=self.mongo_port,mongo_username=self.mongo_username,mongo_pass=self.mongo_pass) as mdb_dal_obj:
                     mdb_crud_obj = mdb_crud.MongoCRUD(mdb_dal_obj.get_client())
 
                     logging.info(f'mongo crud successfully started.')
+                    logger.info(f'mongo crud successfully started.')
 
 
                     consumer_iterator = self.get_message()
@@ -82,6 +87,7 @@ class Manager:
                         es_crud_obj.index_one_with_id(index_name=self.es_index, doc=msg, id_=hashed_id)
 
                         logging.info(f'filename: {file_name} _id: {hashed_id[6]}... - indexed to elastic.')
+                        logger.info(f'filename: {file_name} _id: {hashed_id[6]}... - indexed to elastic.')
 
                         msg['_id'] = hashed_id
                         mdb_crud_obj.save_audio_content_file_on_mdb(db_name=self.mdb_db_name,
@@ -91,9 +97,11 @@ class Manager:
                                                                     file_name=file_name)
 
                         logging.info(f'filename: {file_name} _id: {hashed_id[6]}... - saved to mongo.')
+                        logger.info(f'filename: {file_name} _id: {hashed_id[6]}... - saved to mongo.')
 
 
         except Exception as e:
             logging.critical(f'failed to run the manager , exception: {e}')
+            logger.error(f'failed to run the manager , exception: {e}')
 
 
