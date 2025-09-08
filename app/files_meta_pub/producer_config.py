@@ -1,3 +1,5 @@
+import os
+
 from kafka import KafkaProducer
 import json
 import logging
