@@ -37,7 +37,7 @@ class MongoCRUD:
             return file_id
 
         except Exception as e:
-            logging.critical(f'failed to saving file content of - {audio_file_path} - file, exception: {e}')
+            logging.critical(f'failed to saving file content of - {audio_file_path} - file to mongo, exception: {e}')
 
     # get one document by id
     def get_by_id(self, db_name:str, collection:str, id_: str):

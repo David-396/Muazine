@@ -63,6 +63,7 @@ class Manager:
                         time.sleep(3)
 
             logging.info(f'finish to send files data - sent: {sum_sent}.')
+            self.producer.flush()
 
 
         except Exception as e:

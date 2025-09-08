@@ -2,3 +2,5 @@
 .venv
 podcasts
 __pycache__
+*.log
+.env
