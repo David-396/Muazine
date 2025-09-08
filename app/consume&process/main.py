@@ -2,7 +2,6 @@ import os
 import manager
 import logging
 from dotenv import load_dotenv
-import json
 
 logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("main.log"),logging.StreamHandler()])
 
@@ -33,7 +32,7 @@ ES_INDEX_MAPPING={"properties":
                             "metadata.type":{"type":"keyword"},
                             "metadata.name":{"type":"keyword"},
                             "metadata.size_in_megabytes":{"type":"float"},
-                            "metadata.created_time":{"type":"date"}
+                            "metadata.created_time":{"type":"date", "format": "%Y-%m-%d %H:%M:%S.%f"}
                             }
                        }
 

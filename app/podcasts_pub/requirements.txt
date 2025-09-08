@@ -1,0 +1,7 @@
+logging
+pathlib
+dotenv
+pathlib
+json
+kafka-python
+datetime

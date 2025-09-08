@@ -1,0 +1,7 @@
+logging
+dotenv
+hashlib
+gridfs
+pymongo
+kafka-python
+elasticsearch==8.15.0
