@@ -59,7 +59,7 @@ class Manager:
                     sum_sent += 1
 
                     if temp_msg_send == batch:
-                        logging.info(f'sent {temp_msg_send} messages - wait 3 sec.')
+                        logger.info(f'sent {temp_msg_send} messages - wait 3 sec.')
                         temp_msg_send = 0
                         time.sleep(3)
 
