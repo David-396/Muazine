@@ -15,17 +15,23 @@ class MongoConnector:
             password=mongo_pass
         )
 
-        logging.info(f'new mongo connection on {self.__client.address}')
+        logger.info(f'new mongo connection on {self.__client.address}')
 
     # return the client object
     def get_client(self):
          return self.__client
 
+    # close the client connection
+    def close(self):
+        try:
+            logger.info(f'closing mongo connection on {self.__client.address}')
+            self.__client.close()
+
+        except Exception as e:
+            logger.error(f'failed to close mongo client connection, exception: {e}')
 
     # for with statement
     def __enter__(self):
         return self
     def __exit__(self, exc_type, exc_val, exc_tb):
-        logging.info(f'closing mongo connection on {self.__client.address}')
-        logger.info(f'closing mongo connection on {self.__client.address}')
-        self.__client.close()
+        self.close()

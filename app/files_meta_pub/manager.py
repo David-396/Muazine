@@ -6,7 +6,7 @@ from pathlib import Path
 from app.logger import Logger
 
 logger = Logger.get_logger()
-logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("files_meta_pub.log"),logging.StreamHandler()])
+# logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("files_meta_pub.log"),logging.StreamHandler()])
 
 class Manager:
     def __init__(self, kafka_host:str, kafka_port:str):
@@ -18,11 +18,9 @@ class Manager:
         try:
             self.producer.send(topic=topic, value=file_dict)
 
-            logging.info(f'file: {file_dict} successfully send.')
             logger.info(f'file: {file_dict} successfully send.')
 
         except Exception as e:
-            logging.critical(f'failed to send file: {file_dict} to kafka, exception: {e}.')
             logger.error(f'failed to send file: {file_dict} to kafka, exception: {e}.')
 
 
@@ -35,7 +33,6 @@ class Manager:
             return files
 
         except Exception as e:
-            logging.critical(f'failed to get the list of files in directory: "{directory}", exception: {e}')
             logger.error(f'failed to get the list of files in directory: "{directory}", exception: {e}')
 
 
@@ -54,7 +51,6 @@ class Manager:
 
                     file_dict = FileMetaMade.file_to_json(file_path=file)
 
-                    logging.info(f'sending file metadata: {file_dict}')
                     logger.info(f'sending file metadata: {file_dict}')
 
                     self.send_file_json(file_dict=file_dict, topic=send_topic)
@@ -67,13 +63,11 @@ class Manager:
                         temp_msg_send = 0
                         time.sleep(3)
 
-            logging.info(f'finish to send files data - sent: {sum_sent}.')
             logger.info(f'finish to send files data - sent: {sum_sent}.')
             self.producer.flush()
 
 
         except Exception as e:
-            logging.critical(f'failed occurred on manager.run, exception: {e}')
             logger.error(f'failed occurred on manager.run, exception: {e}')
 
 

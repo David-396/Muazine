@@ -6,7 +6,7 @@ from app.logger import Logger
 
 
 logger = Logger.get_logger()
-logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("consume_and_persist.log"),logging.StreamHandler()])
+# logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("consume_and_persist.log"),logging.StreamHandler()])
 
 load_dotenv()
 
@@ -42,6 +42,7 @@ ES_INDEX_MAPPING={"properties":
 
 CONSUME_TOPICS=['files_json']
 
+logger.info('initialize consume_and_persist manager..')
 
 m = manager.Manager(consume_topics=CONSUME_TOPICS,
                     group_id=GROUP_ID,
@@ -57,4 +58,6 @@ m = manager.Manager(consume_topics=CONSUME_TOPICS,
                     mongo_port=MONGO_PORT,
                     mongo_username=MONGO_USER,
                     mongo_pass=MONGO_PASSWORD)
+
+logger.info('run manager..')
 m.run()

@@ -4,7 +4,7 @@ import logging
 from app.logger import Logger
 
 logger = Logger.get_logger()
-logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("consume_and_persist.log"),logging.StreamHandler()])
+# logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("consume_and_persist.log"),logging.StreamHandler()])
 
 
 class MongoCRUD:
@@ -18,13 +18,11 @@ class MongoCRUD:
             collection = self.client[db_name][collection]
             result = collection.insert_one(doc)
 
-            logging.info(f'doc: {doc} successfully inserted to mdb.')
             logger.info(f'doc: {doc} successfully inserted to mdb.')
 
             return str(result.inserted_id)
 
         except Exception as e:
-            logging.critical(f'exception occurred to insert doc: {doc}, exception: {e}')
             logger.error(f'exception occurred to insert doc: {doc}, exception: {e}')
 
     # saving a audio content to mdb
@@ -37,13 +35,11 @@ class MongoCRUD:
             with open(audio_file_path, 'rb') as audio_file:
                 file_id = fs.put(audio_file, _id=custom_id, filename=file_name)
 
-            logging.info(f'successfully saved - {audio_file_path} - file content to mongo.')
             logger.info(f'successfully saved - {audio_file_path} - file content to mongo.')
 
             return file_id
 
         except Exception as e:
-            logging.critical(f'failed to saving file content of - {audio_file_path} - file to mongo, exception: {e}')
             logger.error(f'failed to saving file content of - {audio_file_path} - file to mongo, exception: {e}')
 
     # get one document by id
@@ -53,12 +49,9 @@ class MongoCRUD:
             collection = self.client[db_name][collection]
             doc_found = collection.find_one({"_id": id_})
 
-            logging.info(f'doc id: {id_} has found.')
-
             return doc_found
 
         except Exception as e:
-            logging.critical(f'exception occurred to find doc id: {id_}, exception: {e}')
             logger.error(f'exception occurred to find doc id: {id_}, exception: {e}')
 
     # get all documents from mongo
@@ -67,12 +60,9 @@ class MongoCRUD:
             collection = self.client[db_name][collection]
             all_docs = collection.find().to_list
 
-            logging.info(f'retrieving all docs from mongo.')
-
             return all_docs
 
         except Exception as e:
-            logging.critical(f'exception occurred to extract all documents from mongo, exception: {e}')
             logger.error(f'exception occurred to extract all documents from mongo, exception: {e}')
 
     # update one document by id
@@ -81,11 +71,9 @@ class MongoCRUD:
             collection = self.client[db_name][collection]
             result = collection.update_one({"_id": id_}, {"$set": update_fields})
 
-            logging.info(f'successfully updated document id: {id_}, result:{result}')
             logger.info(f'successfully updated document id: {id_}, result:{result}')
 
         except Exception as e:
-            logging.critical(f'exception occurred to update document id: {id_}, exception: {e}')
             logger.error(f'exception occurred to update document id: {id_}, exception: {e}')
 
     # delete one document by id
@@ -94,9 +82,7 @@ class MongoCRUD:
             collection = self.client[db_name][collection]
             result = collection.delete_one({"_id": id_})
 
-            logging.info(f'successfully delete id: {id_}, result:{result}')
             logger.info(f'successfully delete id: {id_}, result:{result}')
 
         except Exception as e:
-            logging.critical(f'exception occurred to delete document id: {id_}, exception: {e}')
             logger.error(f'exception occurred to delete document id: {id_}, exception: {e}')

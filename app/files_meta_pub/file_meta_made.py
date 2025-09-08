@@ -3,7 +3,7 @@ import pathlib
 from datetime import datetime
 from app.logger import Logger
 
-logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("files_meta_pub.log"),logging.StreamHandler()])
+# logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("files_meta_pub.log"),logging.StreamHandler()])
 
 logger = Logger.get_logger()
 
@@ -29,7 +29,6 @@ class FileMetaMade:
             return file_dict
 
         except Exception as e:
-            logging.critical(f'exception occurred to jsonify file: {file_path}, exception: {e}.')
             logger.error(f'exception occurred to jsonify file: {file_path}, exception: {e}.')
 
 

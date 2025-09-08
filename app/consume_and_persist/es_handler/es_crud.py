@@ -4,7 +4,7 @@ from app.logger import Logger
 
 
 logger = Logger.get_logger()
-logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("consume_and_persist.log"),logging.StreamHandler()])
+# logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("consume_and_persist.log"),logging.StreamHandler()])
 
 
 
@@ -18,18 +18,16 @@ class CRUD:
             self.client.indices.refresh(index=index_name)
 
         except Exception as e:
-            logging.critical(f'failed to refresh, exception: {e}')
             logger.error(f'failed to refresh, exception: {e}')
 
     # create an index if not exist with setting mappings
     def create_index(self, index_name: str, mappings: dict):
         try:
             if self.client.indices.exists(index=index_name):
-                logging.warning(f'"{index_name}" index already exists.')
+                logger.warning(f'trying to create index - "{index_name}" but index already exists.')
 
                 return
 
-            logging.info(f'"{index_name}" index not exist, creating new index.')
             logger.info(f'"{index_name}" index not exist, creating new index.')
 
             self.client.indices.create(index=index_name, mappings=mappings)
@@ -37,17 +35,15 @@ class CRUD:
             self.refresh(index_name=index_name)
 
         except Exception as e:
-            logging.critical(f'failed to create index - "{index_name}" ---- exception:{e}.')
             logger.error(f'failed to create index - "{index_name}" ---- exception:{e}.')
 
     # delete an index
     def delete_index(self, index_name: str):
         try:
             if not self.client.indices.exists(index=index_name):
-                logging.warning(f'"{index_name}" index not exist.')
+                logger.warning(f'trying to delete index - "{index_name}" index not exist.')
                 return
 
-            logging.info(f'"{index_name}" index exist, deleting.')
             logger.info(f'"{index_name}" index exist, deleting.')
 
             self.client.indices.delete(index=index_name)
@@ -55,7 +51,6 @@ class CRUD:
             self.refresh(index_name=index_name)
 
         except Exception as e:
-            logging.critical(f'failed to delete index - "{index_name}" ---- exception:{e}.')
             logger.error(f'failed to delete index - "{index_name}" ---- exception:{e}.')
 
 
@@ -66,21 +61,18 @@ class CRUD:
             res = self.client.index(index=index_name, document=doc, id=id_)
             _id = res['_id']
 
-            logging.info(f'index succeed, _id:{_id}\ndoc: {doc}')
+            logger.info(f'index succeed, _id:{_id}\ndoc: {doc}')
 
             self.refresh(index_name=index_name)
 
             return _id
 
         except Exception as e:
-            logging.critical(f'failed to index doc: {doc} ---- exception:{e}.')
             logger.error(f'failed to index doc: {doc} ---- exception:{e}.')
 
     # index list of docs
     def index_many(self, index_name:str, docs:list):
         try:
-            logging.info('creating _index actions each doc.')
-
             docs_to_index = []
 
             for doc in docs:
@@ -90,11 +82,11 @@ class CRUD:
 
             success, failed = helpers.bulk(self.client, docs_to_index)
 
-            logging.info(f'{success} docs indexed, {failed} failed.')
+            logger.info(f'{success} docs indexed, {failed} failed.')
+
             self.refresh(index_name=index_name)
 
         except Exception as e:
-            logging.critical(f'exception occurred in indexing_many : {e}.')
             logger.error(f'exception occurred in indexing_many : {e}.')
 
     ''' R - read '''
@@ -103,41 +95,32 @@ class CRUD:
         try:
             doc = self.client.get(index=index_name, id=doc_id)
 
-            logging.info(f'doc with id - {doc_id} found.')
-
-            self.refresh(index_name=index_name)
-
             return doc
 
         except Exception as e:
-            logging.critical(f'exception occurred to get id {doc_id}, exception: {e}.')
             logger.error(f'exception occurred to get id {doc_id}, exception: {e}.')
 
     # return all docs from index
     def get_all_docs(self, index_name:str, size:int=10000):
         try:
-            logging.info(f'retrieving {size} docs.')
 
             docs = self.client.search(index=index_name, size=size)["hits"]["hits"]
-            self.refresh(index_name=index_name)
 
             return docs
 
         except Exception as e:
-            logging.critical(f'exception occurred to extract docs, exception:{e}.')
             logger.error(f'exception occurred to extract docs, exception:{e}.')
 
     # get docs by specific query
     def get_by_query(self, index_name:str, query:dict, size:int):
         try:
-            logging.info(f'retrieving docs by query: {query}')
+            logger.info(f'retrieving docs by query: {query}')
 
             docs = self.client.search(index=index_name,body=query, size=size)["hits"]["hits"]
-            self.refresh(index_name=index_name)
+
             return docs
 
         except Exception as e:
-            logging.critical(f'exception occurred to extract docs, exception:{e}.')
             logger.error(f'exception occurred to extract docs, exception:{e}.')
 
 
@@ -147,23 +130,19 @@ class CRUD:
         try:
             self.client.update(index=index_name, id=doc_id, doc=doc_update_part)
 
-            logging.info(f'doc id: {doc_id}, successfully updated.')
             logger.info(f'doc id: {doc_id}, successfully updated.')
 
             self.refresh(index_name=index_name)
 
         except Exception as e:
-            logging.critical(f'failed to update doc with id: {doc_id}, exception: {e}.')
             logger.error(f'failed to update doc with id: {doc_id}, exception: {e}.')
 
     # update many by list of ids and list of the action part with the value in the update part
     def update_many_by_id(self, index_name:str, docs_ids:list, docs_update_part:list):
         try:
             if len(docs_ids) != len(docs_update_part):
-                logging.critical(f'to bulk docs docs_ids and docs_update_part lists should be with the same len(), docs_ids len: {len(docs_ids)}, docs_update_part len: {len(docs_update_part)}.')
+                logger.critical(f'to bulk docs docs_ids and docs_update_part lists should be with the same len(), docs_ids len: {len(docs_ids)}, docs_update_part len: {len(docs_update_part)}.')
                 return
-
-            logging.info(f'updating {len(docs_ids)} docs..')
 
             docs_to_update = []
 
@@ -173,13 +152,11 @@ class CRUD:
 
             success, failed = helpers.bulk(client=self.client, actions=docs_to_update)
 
-            logging.info(f'{success} docs successfully updated and {failed} docs failed.')
             logger.info(f'{success} docs successfully updated and {failed} docs failed.')
 
             self.refresh(index_name=index_name)
 
         except Exception as e:
-            logging.critical(f'exception in update_many_by_id() failed to update docs, exception: {e}.')
             logger.error(f'exception in update_many_by_id() failed to update docs, exception: {e}.')
 
     # update the docs by a given query
@@ -187,14 +164,12 @@ class CRUD:
         try:
             res = self.client.update_by_query(index=index_name,body=query)
 
-            logging.info(f'update succeed, response from es: {res}.')
             logger.info(f'update succeed, response from es: {res}.')
 
             self.refresh(index_name=index_name)
             return res
 
         except Exception as e:
-            logging.critical(f'exception occurred in update by query, exception: {e}')
             logger.error(f'exception occurred in update by query, exception: {e}')
 
 
@@ -204,19 +179,16 @@ class CRUD:
         try:
             self.client.delete(index=index_name, id=doc_id)
 
-            logging.info(f'doc id: {doc_id}, successfully deleted.')
             logger.info(f'doc id: {doc_id}, successfully deleted.')
 
             self.refresh(index_name=index_name)
 
         except Exception as e:
-            logging.critical(f'failed to delete doc with id: {doc_id}, exception: {e}.')
             logger.error(f'failed to delete doc with id: {doc_id}, exception: {e}.')
 
     # delete many by list of ids
     def delete_many_by_id(self, index_name:str, docs_ids:list):
         try:
-            logging.info(f'deleting {len(docs_ids)} docs..')
 
             docs_to_delete = []
 
@@ -226,13 +198,11 @@ class CRUD:
 
             success, failed = helpers.bulk(client=self.client, actions=docs_to_delete)
 
-            logging.info(f'{success} docs successfully deleted and {failed} docs failed.')
             logger.info(f'{success} docs successfully deleted and {failed} docs failed.')
 
             self.refresh(index_name=index_name)
 
         except Exception as e:
-            logging.critical(f'exception in delete_many_by_id() failed to delete docs, exception: {e}.')
             logger.error(f'exception in delete_many_by_id() failed to delete docs, exception: {e}.')
 
     # delete the docs by a given query
@@ -240,12 +210,10 @@ class CRUD:
         try:
             res = self.client.delete_by_query(index=index_name,body=query)
 
-            logging.info(f'delete succeed, response from es: {res}.')
             logger.info(f'delete succeed, response from es: {res}.')
 
             self.refresh(index_name=index_name)
             return res
 
         except Exception as e:
-            logging.critical(f'exception occurred in delete by query, exception: {e}')
             logger.error(f'exception occurred in delete by query, exception: {e}')
