@@ -1,11 +1,8 @@
-import logging
 from kafka import KafkaConsumer
 import json
-from app.logger import Logger
+from consume_and_persist.logger import Logger
 
 logger = Logger.get_logger()
-# logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("consume_and_persist.log"),logging.StreamHandler()])
-
 
 # setting the consumer
 def get_consumer(topics:list[str], group_id:str, kafka_host:str, kafka_port:str):

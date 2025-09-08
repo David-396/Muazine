@@ -1,13 +1,11 @@
 import hashlib
-import logging
 from kafka_handler import consumer_config
 from es_handler import es_crud, es_dal
 from mdb_handler import mdb_crud, mdb_dal
-from app.logger import Logger
+from logger import Logger
 
 
 logger = Logger.get_logger()
-# logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("consume_and_persist.log"),logging.StreamHandler()])
 
 
 class Manager:

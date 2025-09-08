@@ -1,11 +1,9 @@
-import logging
 import os
 from manager import Manager
 from dotenv import load_dotenv
-from app.logger import Logger
+from logger import Logger
 
 logger = Logger.get_logger()
-# logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("files_meta_pub.log"),logging.StreamHandler()])
 
 load_dotenv()
 

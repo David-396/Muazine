@@ -1,11 +1,8 @@
-import os
 from kafka import KafkaProducer
 import json
-import logging
-from app.logger import Logger
+from logger import Logger
 
 logger = Logger.get_logger()
-# logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("files_meta_pub.log"),logging.StreamHandler()])
 
 class Producer:
     def __init__(self, host:str, port:str):

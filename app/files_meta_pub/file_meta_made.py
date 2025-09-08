@@ -1,9 +1,6 @@
-import logging
 import pathlib
 from datetime import datetime
-from app.logger import Logger
-
-# logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("files_meta_pub.log"),logging.StreamHandler()])
+from logger import Logger
 
 logger = Logger.get_logger()
 

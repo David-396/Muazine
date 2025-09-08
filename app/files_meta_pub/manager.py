@@ -1,12 +1,10 @@
-import logging
 import time
 from producer_config import Producer
 from file_meta_made import FileMetaMade
 from pathlib import Path
-from app.logger import Logger
+from logger import Logger
 
 logger = Logger.get_logger()
-# logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("files_meta_pub.log"),logging.StreamHandler()])
 
 class Manager:
     def __init__(self, kafka_host:str, kafka_port:str):

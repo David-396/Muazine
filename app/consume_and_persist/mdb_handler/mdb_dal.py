@@ -1,10 +1,7 @@
 from pymongo import MongoClient
-import logging
-from app.logger import Logger
+from consume_and_persist.logger import Logger
 
 logger = Logger.get_logger()
-logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',handlers=[logging.FileHandler("consume_and_persist.log"),logging.StreamHandler()])
-
 
 class MongoConnector:
     def __init__(self, mongo_host:str, mongo_port:int, mongo_username:str, mongo_pass:str):
