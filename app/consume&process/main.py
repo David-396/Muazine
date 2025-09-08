@@ -17,8 +17,8 @@ MDB_DB_NAME = os.getenv('MDB_DB_NAME')
 MDB_COLL_NAME = os.getenv('MDB_COLL_NAME')
 MONGO_HOST = os.getenv("MONGO_HOST")
 MONGO_PORT = int(os.getenv("MONGO_PORT"))
-MONGO_USER = os.getenv("MONGO_USER")
-MONGO_PASSWORD = os.getenv("MONGO_PASSWORD")
+MONGO_USER = os.getenv("MONGO_USER") if os.getenv("MONGO_USER") != 'None' else None
+MONGO_PASSWORD = os.getenv("MONGO_PASSWORD") if os.getenv("MONGO_PASSWORD") != 'None' else None
 
 # TOPICS = json.loads(os.getenv('TOPICS'))
 GROUP_ID = os.getenv('GROUP_ID')
