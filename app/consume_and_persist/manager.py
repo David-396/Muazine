@@ -63,7 +63,7 @@ class Manager:
             with es_dal.ESConnector(host=self.es_host,port=self.es_port) as es_dal_obj:
                 es_crud_obj = es_crud.CRUD(es_client=es_dal_obj.get_client())
 
-                es_crud_obj.delete_index(index_name=self.es_index)
+                # es_crud_obj.delete_index(index_name=self.es_index)
                 es_crud_obj.create_index(index_name=self.es_index, mappings=self.es_index_mapping)
 
                 logger.info(f'elastic crud successfully started.')

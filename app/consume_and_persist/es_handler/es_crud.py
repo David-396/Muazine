@@ -1,5 +1,5 @@
 from elasticsearch import Elasticsearch, helpers
-from consume_and_persist.logger import Logger
+from app.consume_and_persist.logger import Logger
 
 logger = Logger.get_logger()
 

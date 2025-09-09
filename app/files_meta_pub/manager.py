@@ -16,7 +16,7 @@ class Manager:
         try:
             self.producer.send(topic=topic, value=file_dict)
 
-            logger.info(f'file: {file_dict} successfully send.')
+            logger.info(f'file: {file_dict} successfully sent to topic: "{topic}".')
 
         except Exception as e:
             logger.error(f'failed to send file: {file_dict} to kafka, exception: {e}.')

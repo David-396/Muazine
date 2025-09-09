@@ -1,6 +1,6 @@
 from kafka import KafkaConsumer
 import json
-from consume_and_persist.logger import Logger
+from app.consume_and_persist.logger import Logger
 
 logger = Logger.get_logger()
 

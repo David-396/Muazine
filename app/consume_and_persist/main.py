@@ -33,12 +33,13 @@ ES_INDEX_MAPPING={"properties":
                             "metadata.type":{"type":"keyword"},
                             "metadata.name":{"type":"keyword"},
                             "metadata.size_in_megabytes":{"type":"float"},
-                            "metadata.created_time":{"type":"date", "format": "%Y-%m-%d %H:%M:%S.%f"}
+                            "metadata.created_time":{"type":"date", "format": "%Y-%m-%d %H:%M:%S.%f"},
+                            "metadata.recognized_text": {"type":"text"}
                             }
                        }
 
 
-CONSUME_TOPICS=['files_json']
+CONSUME_TOPICS=['files_json_with_stt']
 
 logger.info('initialize consume_and_persist manager..')
 

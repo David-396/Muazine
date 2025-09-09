@@ -13,7 +13,7 @@ class Stt:
 
             with sr.AudioFile(file_path) as source:
                 audio = self.recognizer.record(source)
-                text = audio.recognize_google(audio)
+                text = self.recognizer.recognize_google(audio)
 
                 logger.info(f'text for file {file_path} successfully recognized.')
 
