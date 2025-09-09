@@ -34,4 +34,9 @@ manager = Manager(kafka_host=KAFKA_HOST,
 
 logger.info('running the manager..')
 
+'''
+the stt service consume the json file data and add to the json the recognized text
+the recognizer is heavy and need a service for himself
+and before indexing to elastic - complete all the json data about the file and then saving to elastic
+'''
 manager.run()

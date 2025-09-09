@@ -18,9 +18,9 @@ class FileMetaMade:
 
             file_dict = {'absolute_path': str(file_path.absolute()),
                          'metadata': {'type': file_path.suffix,
-                                     'name': file_path.name,
-                                     'size_in_megabytes': stats.st_size / 1000000,
-                                     'created_time': str(datetime.fromtimestamp(stats.st_ctime))}
+                                      'name': file_path.name,
+                                      'size_in_megabytes': stats.st_size / 1000000,
+                                      'created_time': str(datetime.fromtimestamp(stats.st_ctime))}
                          }
 
             return file_dict

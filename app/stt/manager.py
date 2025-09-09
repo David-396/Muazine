@@ -28,18 +28,21 @@ class Manager:
 
     # yielding one message every iteration
     def get_message(self):
+        try:
+            print('starting consuming..')
+            while True:
 
-        while True:
-            print('consuming...')
+                records = self.__consumer.poll(timeout_ms=1000, max_records=1)
+                for tp, messages in records.items():
 
-            records = self.__consumer.poll(timeout_ms=1000, max_records=1)
-            for tp, messages in records.items():
+                    for message in messages:
+                        print(f'consume message: {message.value}')
+                        yield message.value
 
-                for message in messages:
-                    yield message.value
+                time.sleep(0.1)
 
-            time.sleep(0.1)
-
+        except Exception as e:
+            logger.error(f'failed to consume messages, exception: {e}')
 
     # main func - consume json and produce json with the recognized text
     def run(self):
