@@ -45,8 +45,6 @@ class CRUD:
 
             self.client.indices.delete(index=index_name)
 
-            self.refresh(index_name=index_name)
-
         except Exception as e:
             logger.error(f'failed to delete index - "{index_name}" ---- exception:{e}.')
 

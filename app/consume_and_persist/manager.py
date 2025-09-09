@@ -90,7 +90,7 @@ class Manager:
                                                                     audio_file_path=msg['absolute_path'],
                                                                     file_name=file_name)
 
-                        logger.info(f'filename: {file_name} _id: {hashed_id[6]}... - saved to mongo.')
+                        logger.info(f'filename: {file_name} _id: {hashed_id[10]}... - saved to mongo.')
 
 
         except Exception as e:

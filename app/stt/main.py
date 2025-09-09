@@ -1,7 +1,5 @@
 import os
 from dotenv import load_dotenv
-
-from app.stt import stt_convert
 from manager import Manager
 from logger import Logger
 
@@ -14,6 +12,10 @@ KAFKA_HOST = os.getenv('KAFKA_HOST')
 KAFKA_PORT = os.getenv('KAFKA_PORT')
 GROUP_ID = os.getenv('GROUP_ID')
 SEND_TOPIC = os.getenv('SEND_TOPIC')
+METADATA_COL = os.getenv('METADATA_COL')
+RECOGNIZED_TEXT_COL = os.getenv('RECOGNIZED_TEXT_COL')
+FILE_NAME_COL = os.getenv('FILE_NAME_COL')
+ABSOLUTE_PATH_COL = os.getenv('ABSOLUTE_PATH_COL')
 
 CONSUME_TOPICS=['files_json']
 
@@ -23,7 +25,11 @@ manager = Manager(kafka_host=KAFKA_HOST,
                   kafka_port=KAFKA_PORT,
                   consume_topics=CONSUME_TOPICS,
                   group_id=GROUP_ID,
-                  send_topic=SEND_TOPIC
+                  send_topic=SEND_TOPIC,
+                  metadata_col=METADATA_COL,
+                  recognized_text_col=RECOGNIZED_TEXT_COL,
+                  file_name_col=FILE_NAME_COL,
+                  absolute_path_col=ABSOLUTE_PATH_COL
                   )
 
 logger.info('running the manager..')

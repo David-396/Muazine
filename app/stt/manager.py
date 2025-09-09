@@ -5,11 +5,24 @@ import logger
 logger = logger.Logger().get_logger()
 
 class Manager:
-    def __init__(self, kafka_host:str, kafka_port:str, consume_topics:list[str], group_id:str, send_topic:str):
+    def __init__(self, kafka_host:str,
+                 kafka_port:str,
+                 consume_topics:list[str],
+                 group_id:str,
+                 send_topic:str,
+                 metadata_col:str,
+                 recognized_text_col:str,
+                 file_name_col:str,
+                 absolute_path_col:str):
+
         self.__producer = get_producer_config(host=kafka_host, port=kafka_port)
         self.__consumer = get_consumer(topics=consume_topics, group_id=group_id, kafka_host=kafka_host, kafka_port=kafka_port)
         self.__speech_recognizer = Stt()
         self.send_topic = send_topic
+        self.metadata_col = metadata_col
+        self.recognized_text_col = recognized_text_col
+        self.file_name_col = file_name_col
+        self.absolute_path_col = absolute_path_col
 
     # yielding one message every iteration
     def get_message(self):
@@ -28,12 +41,14 @@ class Manager:
         try:
             messages_itr = self.get_message()
             for msg in messages_itr:
-                recognized_text = self.__speech_recognizer.recognize(file_path=msg['absolute_path'])
-                msg['metadata']['recognized_text'] = recognized_text
+                logger.info(f'consume filename: {msg[self.metadata_col][self.file_name_col]} , extract text...')
+
+                recognized_text = self.__speech_recognizer.recognize(file_path=msg[self.absolute_path_col])
+                msg[self.metadata_col][self.recognized_text_col] = recognized_text
 
                 self.__producer.send(topic=self.send_topic, value=msg)
 
-                logger.info(f'{msg['metadata']['name']} json with stt sent successfully to topic: "{self.send_topic}"')
+                logger.info(f'{msg[self.metadata_col][self.file_name_col]} json with stt sent successfully to topic: "{self.send_topic}"')
 
                 sum_sent += 1
 
