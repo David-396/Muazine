@@ -1,3 +1,5 @@
+import time
+
 from kafka_config import get_producer_config, get_consumer
 from stt_convert import Stt
 import logger
@@ -28,11 +30,15 @@ class Manager:
     def get_message(self):
 
         while True:
+            print('consuming...')
+
             records = self.__consumer.poll(timeout_ms=1000, max_records=1)
             for tp, messages in records.items():
 
                 for message in messages:
                     yield message.value
+
+            time.sleep(0.1)
 
 
     # main func - consume json and produce json with the recognized text

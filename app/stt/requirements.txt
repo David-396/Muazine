@@ -1,3 +1,4 @@
 SpeechRecognition
 kafka-python
 elasticsearch==8.15.0
+dotenv
