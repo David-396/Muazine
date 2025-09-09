@@ -12,6 +12,8 @@ cd  C:\Users\User\Desktop\Muazine
 
 
 cd app\files_meta_pub
+cd C:\Users\User\Desktop\Muazine\app\files_meta_pub
+
 docker build -t david4554545/files_meta_pub .
 docker run -d --name files_meta_pub --network kafka-net --volume C:\Users\User\Desktop\Muazine\podcasts:/app/podcasts david4554545/files_meta_pub
 
@@ -23,7 +25,6 @@ cd app\consume_and_persist
 docker build -t david4554545/consume_and_persist .
 docker run -d --name consume_and_persist --network kafka-net --volume C:\Users\User\Desktop\Muazine\podcasts:/app/podcasts david4554545/consume_and_persist
 
-cd ..
-cd stt
-docker build -t david4554545/stt .
-docker run -d --name stt --network kafka-net --volume C:\Users\User\Desktop\Muazine\podcasts:/app/podcasts david4554545/stt
+cd C:\Users\User\Desktop\Muazine\app\stt
+
+
