@@ -53,7 +53,7 @@ class Manager:
                 logger.info(f'consume filename: {msg[self.metadata_col][self.file_name_col]} , extract text...')
 
                 recognized_text = self.__speech_recognizer.recognize(file_path=msg[self.absolute_path_col])
-                msg[self.metadata_col][self.recognized_text_col] = recognized_text
+                msg[self.metadata_col][self.recognized_text_col] = recognized_text.lower()
 
                 self.__producer.send(topic=self.send_topic, value=msg)
 

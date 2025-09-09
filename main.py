@@ -1,18 +1,19 @@
-from pathlib import Path
+import base64
 
-# file_name = r".\podcasts\download.wav"
-# file_path = Path(file_name)
-# stats = file_path.stat()
-# print(file_path.name)
-# print(file_path.suffix)
-# print(file_path.absolute())
-# print(stats.st_mtime)
-# print(stats.st_ctime)
-# print(f'{stats.st_size / 1000000} mega_bytes.')
+# hostile
+base64_string ="R2Vub2NpZGUsV2FyIENyaW1lcyxBcGFydGhlaWQsTWFzc2FjcmUsTmFrYmEsRGlzcGxhY2VtZW50LEh1bWFuaXRhcmlhbiBDcmlzaXMsQmxvY2thZGUsT2NjdXBhdGlvbixSZWZ1Z2Vl cyxJQ0MsQkRT"
+base64_bytes = base64_string.encode("utf-8")
 
+sample_string_bytes = base64.b64decode(base64_bytes)
+sample_string = sample_string_bytes.decode('utf-8')
 
-path = Path('podcasts')
-files = [item for item in path.iterdir() if item.is_file()]
-for file in files:
-    print(file)
-    print(file.stat().st_size)
+print(f"Decoded string: {sample_string}")
+
+# less hostile
+base64_string ="RnJlZWRvbSBGbG90aWxsYSxSZXNpc3RhbmNlLExpYmVyYXRpb24sRnJlZSBQYWxlc3RpbmUsR2F6YSxDZWFzZWZpcmUsUHJvdGVzdCxVTlJXQQ=="
+base64_bytes = base64_string.encode("utf-8")
+
+sample_string_bytes = base64.b64decode(base64_bytes)
+sample_string = sample_string_bytes.decode('utf-8')
+
+print(f"Decoded string: {sample_string}")
