@@ -72,6 +72,8 @@ class Manager:
 
                             temp_action['_id'] = doc['_id']
 
+                            # es_crud.client.update(index=self.es_index, id=doc['_id'], doc=temp_action)
+
                             bulk_actions.append(temp_action)
 
                             logger.info(f'doc id:{doc['_id']} successfully classified - result: {temp_action['doc']}')
