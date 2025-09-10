@@ -1,7 +1,12 @@
 import os
+import time
+
+from dotenv import load_dotenv
 from base64_decrypt import decrypt_from_base64
 from manager import Manager
 from logger import Logger
+
+load_dotenv()
 
 logger = Logger().get_logger()
 
@@ -27,4 +32,9 @@ manager = Manager(es_host=ES_HOST,
 
 logger.info('running the classifier..')
 
-manager.run_classifier()
+while True:
+    manager.run_classifier()
+
+    logger.info('waiting 10 seconds..')
+
+    time.sleep(10.0)

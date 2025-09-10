@@ -40,6 +40,7 @@ class Classifier:
             mapping_dict = {'hostile':[], 'less_hostile':[]}
 
             for word in matches_words:
+                word = word.lower()
                 if word in self.hostile_list:
                     mapping_dict['hostile'].append(word)
 
@@ -81,11 +82,3 @@ class Classifier:
             risk = 'HIGH'
 
         return risk
-
-
-
-
-# war crimes
-# humanitarian crisis
-# freedom flotilla
-# free palestine

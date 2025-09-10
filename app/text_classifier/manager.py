@@ -39,7 +39,13 @@ class Manager:
 
                 query = {
                     "query": {
-                        "match": {"metadata.recognized_text": ' '.join(self.hostile_lst) + ' ' + ' '.join(self.less_hostile_lst)}
+                        "bool": {
+                            "should": [
+                                    {"match": {"metadata.recognized_text": ' '.join(self.hostile_lst) + ' ' + ' '.join(self.less_hostile_lst)}}],
+                            "must":[
+
+                                    {"match": {"metadata.bds_percent": -1.1}}]
+                        }
                     },
                     "highlight": {
                         "fields": {
@@ -53,25 +59,31 @@ class Manager:
                 bulk_actions = []
 
                 temp_action = {'_op_type': 'update',
-                               '_index': self.es_index}
+                               '_index': self.es_index,
+                               'doc':{'metadata':{}}}
 
-                for doc in hostile_and_less_hostile_docs:
+                if hostile_and_less_hostile_docs:
+                    for doc in hostile_and_less_hostile_docs:
+                        # print(doc)
+                        if 'bds_percent' not in doc['_source']['metadata'].keys():
 
-                    bds_percent = self.classifier.bds_percent(result_doc=doc)
+                            bds_percent = self.classifier.bds_percent(result_doc=doc)
 
-                    temp_action['doc'] = {'metadata.bds_percent': bds_percent,
-                                          'metadata.is_bds': self.classifier.is_bds(percent=bds_percent),
-                                          'metadata.risk_rank': self.classifier.risk_rank(percent=bds_percent)}
+                            temp_action['doc']['metadata']['bds_percent']  = bds_percent
+                            temp_action['doc']['metadata']['is_bds'] =  self.classifier.is_bds(percent=bds_percent)
+                            temp_action['doc']['metadata']['risk_rank'] = self.classifier.risk_rank(percent=bds_percent)
 
-                    temp_action['_id'] = doc['_id']
+                            temp_action['_id'] = doc['_id']
 
-                    bulk_actions.append(temp_action)
+                            bulk_actions.append(temp_action)
 
-                    logger.info(f'doc id:{doc['_id']} successfully classified - result: {temp_action['doc']}')
+                            logger.info(f'doc id:{doc['_id']} successfully classified - result: {temp_action['doc']}')
 
-                success, failed = bulk(client=es_client, actions=bulk_actions)
+                    if bulk_actions:
+                        success, failed = bulk(client=es_client.get_client(), actions=bulk_actions)
+                        es_crud.refresh(index_name=self.es_index)
 
-                logger.info(f'{success} docs updated successfully and - {failed} - has failed.')
+                        logger.info(f'{success} docs updated successfully and - {failed} - has failed.')
 
         except Exception as e:
             logger.error(f'failed to run the classifier manager, exception: {e}')

@@ -81,7 +81,7 @@ class Manager:
 
                         es_crud_obj.index_one_with_id(index_name=self.es_index, doc=msg, id_=hashed_id)
 
-                        logger.info(f'filename: {file_name} _id: {hashed_id[6]}... - indexed to elastic.')
+                        logger.info(f'filename: {file_name} _id: {hashed_id[:6]}... - indexed to elastic.')
 
                         msg['_id'] = hashed_id
                         mdb_crud_obj.save_audio_content_file_on_mdb(db_name=self.mdb_db_name,
@@ -90,7 +90,7 @@ class Manager:
                                                                     audio_file_path=msg['absolute_path'],
                                                                     file_name=file_name)
 
-                        logger.info(f'filename: {file_name} _id: {hashed_id[10]}... - saved to mongo.')
+                        logger.info(f'filename: {file_name} _id: {hashed_id[:6]}... - saved to mongo.')
 
 
         except Exception as e:

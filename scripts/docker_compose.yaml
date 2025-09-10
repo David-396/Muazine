@@ -30,6 +30,7 @@ services:
       - ES_JAVA_OPTS=-Xms1g -Xmx1g
     networks:
       - muazine_proj_net
+      - elastic-kibana-net
 
   Kibana:
     image: docker.elastic.co/kibana/kibana:8.15.0
@@ -39,13 +40,14 @@ services:
     depends_on:
       - elastic_search
     environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_HOSTS=http://elastic_search:9200
     networks:
-      - muazine_proj_net
+#      - muazine_proj_net
+      - elastic-kibana-net
 
 networks:
-#  elastic-kibana-net:
-#    driver: bridge
+  elastic-kibana-net:
+    driver: bridge
 #  kafka-net:
 #    driver: bridge
   muazine_proj_net:
