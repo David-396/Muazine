@@ -64,6 +64,7 @@ class Manager:
             logger.info(f'{sum_sent} messages with the recognized text sent to topic: "{self.send_topic}"')
 
             self.__producer.flush()
+            self.__producer.close()
 
         except Exception as e:
             logger.error(f'exception occurred in run manager, exception: {e}')

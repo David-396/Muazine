@@ -107,7 +107,7 @@ class CRUD:
             logger.error(f'exception occurred to extract docs, exception:{e}.')
 
     # get docs by specific query
-    def get_by_query(self, index_name:str, query:dict, size:int):
+    def get_by_query(self, index_name:str, query:dict, size:int=1000):
         try:
             logger.info(f'retrieving docs by query: {query}')
 

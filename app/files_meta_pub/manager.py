@@ -63,7 +63,7 @@ class Manager:
 
             logger.info(f'finish to send files data - sent: {sum_sent}.')
             self.producer.flush()
-
+            self.producer.close()
 
         except Exception as e:
             logger.error(f'failed occurred on manager.run, exception: {e}')

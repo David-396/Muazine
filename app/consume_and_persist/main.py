@@ -34,7 +34,10 @@ ES_INDEX_MAPPING={"properties":
                             "metadata.name":{"type":"keyword"},
                             "metadata.size_in_megabytes":{"type":"float"},
                             "metadata.created_time":{"type":"date", "format": "yyyy-MM-dd HH:mm:ss.SSSSSS"},
-                            "metadata.recognized_text": {"type":"text"}
+                            "metadata.recognized_text": {"type":"text"},
+                            "metadata.bds_percent": {"type": "float"},
+                            "metadata.is_bds": {"type": "boolean"},
+                            "metadata.risk_rank": {"type": "keyword"}
                             }
                        }
 
