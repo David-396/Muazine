@@ -36,9 +36,7 @@ class Manager:
         try:
             with ESConnector(host=self.es_host, port=self.es_port) as es_client:
                 es_crud = CRUD(es_client=es_client.get_client())
-                all_ = es_client.get_client().search(index=self.es_index)
-                # print(all_)
-                # return
+
                 query = {
                     "query": {
                         "bool": {
@@ -63,7 +61,7 @@ class Manager:
 
                 if hostile_and_less_hostile_docs:
                     for doc in hostile_and_less_hostile_docs:
-                        # print(doc)
+
                         if 'bds_percent' not in doc['_source']['metadata'].keys():
 
                             bds_percent = self.classifier.bds_percent(result_doc=doc)
