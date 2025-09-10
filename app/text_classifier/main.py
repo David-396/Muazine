@@ -1,6 +1,5 @@
 import os
 import time
-
 from dotenv import load_dotenv
 from base64_decrypt import decrypt_from_base64
 from manager import Manager

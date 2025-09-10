@@ -36,15 +36,14 @@ class Manager:
         try:
             with ESConnector(host=self.es_host, port=self.es_port) as es_client:
                 es_crud = CRUD(es_client=es_client.get_client())
-
+                all_ = es_client.get_client().search(index=self.es_index)
+                print(all_)
+                # return
                 query = {
                     "query": {
                         "bool": {
-                            "should": [
-                                    {"match": {"metadata.recognized_text": ' '.join(self.hostile_lst) + ' ' + ' '.join(self.less_hostile_lst)}}],
-                            "must":[
-
-                                    {"match": {"metadata.bds_percent": -1.1}}]
+                            "should": [{"match": {"metadata.recognized_text": ' '.join(self.hostile_lst) + ' ' + ' '.join(self.less_hostile_lst)}}],
+                            "must": [{"match": {"metadata.bds_percent": -1.1}}]
                         }
                     },
                     "highlight": {
