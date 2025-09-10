@@ -33,42 +33,43 @@ class Classifier:
     # calculating the hostile percent
     def bds_percent(self, result_doc:dict):
         try:
-            if "highlight" in result_doc:
+            if "highlight" not in result_doc:
+                return result_doc['_score'] * 100
 
-                # get the score of the doc - to see how much the hostile and not hostile words are match to the lists
-                score = result_doc['_score']
-                # getting all the matches words that found in the text - hostile and less hostile
-                matches_words = self.highlighted_words(text=result_doc['highlight']['metadata.recognized_text'])
+            # get the score of the doc - to see how much the hostile and not hostile words are match to the lists
+            score = result_doc['_score']
+            # getting all the matches words that found in the text - hostile and less hostile
+            matches_words = self.highlighted_words(text=result_doc['highlight']['metadata.recognized_text'])
 
-                # mapping them by hostile and not
-                mapping_dict = {'hostile':[], 'less_hostile':[]}
+            # mapping them by hostile and not
+            mapping_dict = {'hostile':[], 'less_hostile':[]}
 
-                for word in matches_words:
-                    word = word.lower()
-                    if word in self.hostile_list:
-                        mapping_dict['hostile'].append(word)
+            for word in matches_words:
+                word = word.lower()
+                if word in self.hostile_list:
+                    mapping_dict['hostile'].append(word)
 
-                    elif word in self.less_hostile_list:
-                        mapping_dict['less_hostile'].append(word)
+                elif word in self.less_hostile_list:
+                    mapping_dict['less_hostile'].append(word)
 
-                # get the len of all the text
-                all_text_len = len(result_doc['_source']['metadata']['recognized_text'].split(' '))
-                # calculate how much its hostile:
-                #       calculate the ratio between the matched words to all the text and double it - because its the hostile percent
-                percent_hostile = (len(mapping_dict['hostile']) / all_text_len) * 2
+            # get the len of all the text
+            all_text_len = len(result_doc['_source']['metadata']['recognized_text'].split(' '))
+            # calculate how much its hostile:
+            #       calculate the ratio between the matched words to all the text and double it - because its the hostile percent
+            percent_hostile = (len(mapping_dict['hostile']) / all_text_len) * 2
 
-                # calculate how much its less hostile:
-                #       calculate the ratio between the matched words to all the text
-                percent_less_hostile = len(mapping_dict['less_hostile']) / all_text_len
+            # calculate how much its less hostile:
+            #       calculate the ratio between the matched words to all the text
+            percent_less_hostile = len(mapping_dict['less_hostile']) / all_text_len
 
-                # adding them and double in score - in case that the recognized hostile words weren't exactly as listed in the hostile words list,
-                # but were a little distorted.
-                # so if it were distorted it will lower the percent , and if not it will increase the percent.
-                sum_percent = (percent_hostile + percent_less_hostile) * score * 100
+            # adding them and double in score - in case that the recognized hostile words weren't exactly as listed in the hostile words list,
+            # but were a little distorted.
+            # so if it were distorted it will lower the percent , and if not it will increase the percent.
+            sum_percent = (percent_hostile + percent_less_hostile) * score * 100
 
-                # print('SCORE:', score, 'PERCENT_HOSTILE:',percent_hostile, 'PERCENT_LESS_HOSTILE:',percent_less_hostile, 'SUM_PERCENT:',sum_percent, 'MATCHES_WORDS:',matches_words, 'MAPPING_DICT:',mapping_dict)
+            # print('SCORE:', score, 'PERCENT_HOSTILE:',percent_hostile, 'PERCENT_LESS_HOSTILE:',percent_less_hostile, 'SUM_PERCENT:',sum_percent, 'MATCHES_WORDS:',matches_words, 'MAPPING_DICT:',mapping_dict)
 
-                return sum_percent
+            return sum_percent
 
         except Exception as e:
             logger.error(f'failed to calculate the bds percent, exception: {e}')
