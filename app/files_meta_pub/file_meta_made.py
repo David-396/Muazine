@@ -21,7 +21,7 @@ class FileMetaMade:
                                       'name': file_path.name,
                                       'size_in_megabytes': stats.st_size / 1000000,
                                       'created_time': str(datetime.fromtimestamp(stats.st_ctime)),
-                                      'bds_percent': -1.1}
+                                      'risk_rank': "unprocessed"}
                          }
 
             return file_dict
